@@ -1,0 +1,975 @@
+---
+title: "Extract GRM modeling results"
+output: html_notebook
+---
+
+Author : Purwoko Haryadi Santoso, UNY, Indonesia
+
+# I. Open the previous GRM modeling 
+```{r}
+mod.grm_3 <- readRDS("output GRM/mod.grm_3.rds")
+mod.grm_5 <- readRDS("output GRM/mod.grm_5.rds")
+mod.grm_7 <- readRDS("output GRM/mod.grm_7.rds")
+mod.grm_9 <- readRDS("output GRM/mod.grm_9.rds")
+mod.grm_11 <- readRDS("output GRM/mod.grm_11.rds")
+```
+
+# II. Extract item parameter
+```{r, warning=FALSE}
+library(mirt)
+M <- 1000
+itempar_3 <- list()
+itempar_5 <- list()
+itempar_7 <- list()
+itempar_9 <- list()
+itempar_11 <- list()
+
+for(i in 1:M){
+  itempar_3[[i]] <- coef(mod.grm_3[[i]], IRTpars = T, simplify = T)$items
+  itempar_5[[i]] <- coef(mod.grm_5[[i]], IRTpars = T, simplify = T)$items
+  itempar_7[[i]] <- coef(mod.grm_7[[i]], IRTpars = T, simplify = T)$items
+  itempar_9[[i]] <- coef(mod.grm_9[[i]], IRTpars = T, simplify = T)$items
+  itempar_11[[i]] <- coef(mod.grm_11[[i]], IRTpars = T, simplify = T)$items
+}
+
+itempar <- list(itempar_3, itempar_5, itempar_7, itempar_9, itempar_11)
+saveRDS(itempar, "output GRM/itempar.rds")
+```
+
+# III. Item level analysis
+
+## A. Open item fit results
+
+```{r}
+itemfit_3 <- readRDS("output GRM/itemfit.rds")[[1]]
+itemfit_5 <- readRDS("output GRM/itemfit.rds")[[2]]
+itemfit_7 <- readRDS("output GRM/itemfit.rds")[[3]]
+itemfit_9 <- readRDS("output GRM/itemfit.rds")[[4]]
+itemfit_11 <- readRDS("output GRM/itemfit.rds")[[5]]
+```
+
+## B. Results of 3-point
+
+### 1. Discrimination index (a)
+```{r}
+a1_d3 <- rep(0,M)
+a2_d3 <- rep(0,M)
+a3_d3 <- rep(0,M)
+a4_d3 <- rep(0,M)
+a5_d3 <- rep(0,M)
+a6_d3 <- rep(0,M)
+a7_d3 <- rep(0,M)
+a8_d3 <- rep(0,M)
+a9_d3 <- rep(0,M)
+a10_d3 <- rep(0,M)
+
+for(i in 1:M){
+  a1_d3[i] <- itempar[[1]][[i]][1]
+  a2_d3[i] <- itempar[[1]][[i]][2]
+  a3_d3[i] <- itempar[[1]][[i]][3]
+  a4_d3[i] <- itempar[[1]][[i]][4]
+  a5_d3[i] <- itempar[[1]][[i]][5]
+  a6_d3[i] <- itempar[[1]][[i]][6]
+  a7_d3[i] <- itempar[[1]][[i]][7]
+  a8_d3[i] <- itempar[[1]][[i]][8]
+  a9_d3[i] <- itempar[[1]][[i]][9]
+  a10_d3[i] <- itempar[[1]][[i]][10]
+}
+```
+
+### 2. Item endorsement (b)
+```{r}
+b1_d3 <- rep(0,M)
+b2_d3 <- rep(0,M)
+b3_d3 <- rep(0,M)
+b4_d3 <- rep(0,M)
+b5_d3 <- rep(0,M)
+b6_d3 <- rep(0,M)
+b7_d3 <- rep(0,M)
+b8_d3 <- rep(0,M)
+b9_d3 <- rep(0,M)
+b10_d3 <- rep(0,M)
+
+for(i in 1:M){
+  b1_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[1]
+  b2_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[2]
+  b3_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[3]
+  b4_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[4]
+  b5_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[5]
+  b6_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[6]
+  b7_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[7]
+  b8_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[8]
+  b9_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[9]
+  b10_d3[i] <- apply(itempar[[1]][[i]][,-1], 1, mean)[10]
+}
+```
+
+
+### 3. Chi square statistics
+```{r}
+chi1_d3 <- rep(0,M)
+chi2_d3 <- rep(0,M)
+chi3_d3 <- rep(0,M)
+chi4_d3 <- rep(0,M)
+chi5_d3 <- rep(0,M)
+chi6_d3 <- rep(0,M)
+chi7_d3 <- rep(0,M)
+chi8_d3 <- rep(0,M)
+chi9_d3 <- rep(0,M)
+chi10_d3 <- rep(0,M)
+
+for(i in 1:M){
+  chi1_d3[i] <- itemfit_3[[i]][1,2]
+  chi2_d3[i] <- itemfit_3[[i]][2,2]
+  chi3_d3[i] <- itemfit_3[[i]][3,2]
+  chi4_d3[i] <- itemfit_3[[i]][4,2]
+  chi5_d3[i] <- itemfit_3[[i]][5,2]
+  chi6_d3[i] <- itemfit_3[[i]][6,2]
+  chi7_d3[i] <- itemfit_3[[i]][7,2]
+  chi8_d3[i] <- itemfit_3[[i]][8,2]
+  chi9_d3[i] <- itemfit_3[[i]][9,2]
+  chi10_d3[i] <- itemfit_3[[i]][10,2]
+}
+```
+
+### 4. p-value Chi square
+```{r}
+p1_d3 <- rep(0,M)
+p2_d3 <- rep(0,M)
+p3_d3 <- rep(0,M)
+p4_d3 <- rep(0,M)
+p5_d3 <- rep(0,M)
+p6_d3 <- rep(0,M)
+p7_d3 <- rep(0,M)
+p8_d3 <- rep(0,M)
+p9_d3 <- rep(0,M)
+p10_d3 <- rep(0,M)
+
+for(i in 1:M){
+  p1_d3[i] <- itemfit_3[[i]][1,5]
+  p2_d3[i] <- itemfit_3[[i]][2,5]
+  p3_d3[i] <- itemfit_3[[i]][3,5]
+  p4_d3[i] <- itemfit_3[[i]][4,5]
+  p5_d3[i] <- itemfit_3[[i]][5,5]
+  p6_d3[i] <- itemfit_3[[i]][6,5]
+  p7_d3[i] <- itemfit_3[[i]][7,5]
+  p8_d3[i] <- itemfit_3[[i]][8,5]
+  p9_d3[i] <- itemfit_3[[i]][9,5]
+  p10_d3[i] <- itemfit_3[[i]][10,5]
+}
+```
+
+### 5. RMSEA fit index
+```{r}
+R1_d3 <- rep(0,M)
+R2_d3 <- rep(0,M)
+R3_d3 <- rep(0,M)
+R4_d3 <- rep(0,M)
+R5_d3 <- rep(0,M)
+R6_d3 <- rep(0,M)
+R7_d3 <- rep(0,M)
+R8_d3 <- rep(0,M)
+R9_d3 <- rep(0,M)
+R10_d3 <- rep(0,M)
+
+for(i in 1:M){
+  R1_d3[i] <- itemfit_3[[i]][1,4]
+  R2_d3[i] <- itemfit_3[[i]][2,4]
+  R3_d3[i] <- itemfit_3[[i]][3,4]
+  R4_d3[i] <- itemfit_3[[i]][4,4]
+  R5_d3[i] <- itemfit_3[[i]][5,4]
+  R6_d3[i] <- itemfit_3[[i]][6,4]
+  R7_d3[i] <- itemfit_3[[i]][7,4]
+  R8_d3[i] <- itemfit_3[[i]][8,4]
+  R9_d3[i] <- itemfit_3[[i]][9,4]
+  R10_d3[i] <- itemfit_3[[i]][10,4]
+}
+```
+
+### 6. Summary for 3-point experiment
+```{r}
+data.frame(Butir = c(1:10),
+           a_Mean = c(mean(a1_d3), mean(a2_d3), mean(a3_d3), mean(a4_d3), mean(a5_d3), mean(a6_d3), mean(a7_d3), mean(a8_d3), mean(a9_d3), mean(a10_d3)), 
+           a_SD = c(sd(a1_d3), sd(a2_d3), sd(a3_d3), sd(a4_d3), sd(a5_d3), sd(a6_d3), sd(a7_d3), sd(a8_d3), sd(a9_d3), sd(a10_d3)),
+           b_Mean = c(mean(b1_d3), mean(b2_d3), mean(b3_d3), mean(b4_d3), mean(b5_d3), mean(b6_d3), mean(b7_d3), mean(b8_d3), mean(b9_d3), mean(b10_d3)), 
+           b_SD = c(sd(b1_d3), sd(b2_d3), sd(b3_d3), sd(b4_d3), sd(b5_d3), sd(b6_d3), sd(b7_d3), sd(b8_d3), sd(b9_d3), sd(b10_d3)),
+           X_mean = c(mean(chi1_d3), mean(chi2_d3), mean(chi3_d3), mean(chi4_d3), mean(chi5_d3), mean(chi6_d3), mean(chi7_d3), mean(chi8_d3), mean(chi9_d3), mean(chi10_d3)),
+           X_SD = c(sd(chi1_d3), sd(chi2_d3), sd(chi3_d3), sd(chi4_d3), sd(chi5_d3), sd(chi6_d3), sd(chi7_d3), sd(chi8_d3), sd(chi9_d3), sd(chi10_d3)),
+           p_mean = c(mean(p1_d3), mean(p2_d3), mean(p3_d3), mean(p4_d3), mean(p5_d3), mean(p6_d3), mean(p7_d3), mean(p8_d3), mean(p9_d3), mean(p10_d3)),
+           p_SD = c(sd(p1_d3), sd(p2_d3), sd(p3_d3), sd(p4_d3), sd(p5_d3), sd(p6_d3), sd(p7_d3), sd(p8_d3), sd(p9_d3), sd(p10_d3)),
+           RMSEA_mean = c(mean(R1_d3), mean(R2_d3), mean(R3_d3), mean(R4_d3), mean(R5_d3), mean(R6_d3), mean(R7_d3), mean(R8_d3), mean(R9_d3), mean(R10_d3)),
+           RMSEA_SD = c(sd(R1_d3), sd(R2_d3), sd(R3_d3), sd(R4_d3), sd(R5_d3), sd(R6_d3), sd(R7_d3), sd(R8_d3), sd(R9_d3), sd(R10_d3)))
+```
+
+## C. Results of 5-point
+
+### 1. Discrimination index (a)
+```{r}
+a1_d5 <- rep(0,M)
+a2_d5 <- rep(0,M)
+a3_d5 <- rep(0,M)
+a4_d5 <- rep(0,M)
+a5_d5 <- rep(0,M)
+a6_d5 <- rep(0,M)
+a7_d5 <- rep(0,M)
+a8_d5 <- rep(0,M)
+a9_d5 <- rep(0,M)
+a10_d5 <- rep(0,M)
+
+for(i in 1:M){
+  a1_d5[i] <- itempar[[1]][[i]][1]
+  a2_d5[i] <- itempar[[1]][[i]][2]
+  a3_d5[i] <- itempar[[1]][[i]][3]
+  a4_d5[i] <- itempar[[1]][[i]][4]
+  a5_d5[i] <- itempar[[1]][[i]][5]
+  a6_d5[i] <- itempar[[1]][[i]][6]
+  a7_d5[i] <- itempar[[1]][[i]][7]
+  a8_d5[i] <- itempar[[1]][[i]][8]
+  a9_d5[i] <- itempar[[1]][[i]][9]
+  a10_d5[i] <- itempar[[1]][[i]][10]
+}
+```
+
+### 2. Item endorsement (b)
+```{r}
+b1_d5 <- rep(0,M)
+b2_d5 <- rep(0,M)
+b3_d5 <- rep(0,M)
+b4_d5 <- rep(0,M)
+b5_d5 <- rep(0,M)
+b6_d5 <- rep(0,M)
+b7_d5 <- rep(0,M)
+b8_d5 <- rep(0,M)
+b9_d5 <- rep(0,M)
+b10_d5 <- rep(0,M)
+
+for(i in 1:M){
+  b1_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[1]
+  b2_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[2]
+  b3_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[3]
+  b4_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[4]
+  b5_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[5]
+  b6_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[6]
+  b7_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[7]
+  b8_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[8]
+  b9_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[9]
+  b10_d5[i] <- apply(itempar[[2]][[i]][,-1], 1, mean)[10]
+}
+```
+
+### 3. Chi square statistics
+```{r}
+chi1_d5 <- rep(0,M)
+chi2_d5 <- rep(0,M)
+chi3_d5 <- rep(0,M)
+chi4_d5 <- rep(0,M)
+chi5_d5 <- rep(0,M)
+chi6_d5 <- rep(0,M)
+chi7_d5 <- rep(0,M)
+chi8_d5 <- rep(0,M)
+chi9_d5 <- rep(0,M)
+chi10_d5 <- rep(0,M)
+
+for(i in 1:M){
+  chi1_d5[i] <- itemfit_5[[i]][1,2]
+  chi2_d5[i] <- itemfit_5[[i]][2,2]
+  chi3_d5[i] <- itemfit_5[[i]][3,2]
+  chi4_d5[i] <- itemfit_5[[i]][4,2]
+  chi5_d5[i] <- itemfit_5[[i]][5,2]
+  chi6_d5[i] <- itemfit_5[[i]][6,2]
+  chi7_d5[i] <- itemfit_5[[i]][7,2]
+  chi8_d5[i] <- itemfit_5[[i]][8,2]
+  chi9_d5[i] <- itemfit_5[[i]][9,2]
+  chi10_d5[i] <- itemfit_5[[i]][10,2]
+}
+```
+
+### 4. p-value Chi square
+```{r}
+p1_d5 <- rep(0,M)
+p2_d5 <- rep(0,M)
+p3_d5 <- rep(0,M)
+p4_d5 <- rep(0,M)
+p5_d5 <- rep(0,M)
+p6_d5 <- rep(0,M)
+p7_d5 <- rep(0,M)
+p8_d5 <- rep(0,M)
+p9_d5 <- rep(0,M)
+p10_d5 <- rep(0,M)
+
+for(i in 1:M){
+  p1_d5[i] <- itemfit_5[[i]][1,5]
+  p2_d5[i] <- itemfit_5[[i]][2,5]
+  p3_d5[i] <- itemfit_5[[i]][3,5]
+  p4_d5[i] <- itemfit_5[[i]][4,5]
+  p5_d5[i] <- itemfit_5[[i]][5,5]
+  p6_d5[i] <- itemfit_5[[i]][6,5]
+  p7_d5[i] <- itemfit_5[[i]][7,5]
+  p8_d5[i] <- itemfit_5[[i]][8,5]
+  p9_d5[i] <- itemfit_5[[i]][9,5]
+  p10_d5[i] <- itemfit_5[[i]][10,5]
+}
+```
+
+### 5. RMSEA fit index
+```{r}
+R1_d5 <- rep(0,M)
+R2_d5 <- rep(0,M)
+R3_d5 <- rep(0,M)
+R4_d5 <- rep(0,M)
+R5_d5 <- rep(0,M)
+R6_d5 <- rep(0,M)
+R7_d5 <- rep(0,M)
+R8_d5 <- rep(0,M)
+R9_d5 <- rep(0,M)
+R10_d5 <- rep(0,M)
+
+for(i in 1:M){
+  R1_d5[i] <- itemfit_5[[i]][1,4]
+  R2_d5[i] <- itemfit_5[[i]][2,4]
+  R3_d5[i] <- itemfit_5[[i]][3,4]
+  R4_d5[i] <- itemfit_5[[i]][4,4]
+  R5_d5[i] <- itemfit_5[[i]][5,4]
+  R6_d5[i] <- itemfit_5[[i]][6,4]
+  R7_d5[i] <- itemfit_5[[i]][7,4]
+  R8_d5[i] <- itemfit_5[[i]][8,4]
+  R9_d5[i] <- itemfit_5[[i]][9,4]
+  R10_d5[i] <- itemfit_5[[i]][10,4]
+}
+```
+
+### 6. Summary of 5-point experiment
+```{r}
+data.frame(Butir = c(1:10),
+           a_Mean = c(mean(a1_d5), mean(a2_d5), mean(a3_d5), mean(a4_d5), mean(a5_d5), mean(a6_d5), mean(a7_d5), mean(a8_d5), mean(a9_d5), mean(a10_d5)), 
+           a_SD = c(sd(a1_d5), sd(a2_d5), sd(a3_d5), sd(a4_d5), sd(a5_d5), sd(a6_d5), sd(a7_d5), sd(a8_d5), sd(a9_d5), sd(a10_d5)),
+           b_Mean = c(mean(b1_d5), mean(b2_d5), mean(b3_d5), mean(b4_d5), mean(b5_d5), mean(b6_d5), mean(b7_d5), mean(b8_d5), mean(b9_d5), mean(b10_d5)), 
+           b_SD = c(sd(b1_d5), sd(b2_d5), sd(b3_d5), sd(b4_d5), sd(b5_d5), sd(b6_d5), sd(b7_d5), sd(b8_d5), sd(b9_d5), sd(b10_d5)),
+           X_mean = c(mean(chi1_d5), mean(chi2_d5), mean(chi3_d5), mean(chi4_d5), mean(chi5_d5), mean(chi6_d5), mean(chi7_d5), mean(chi8_d5), mean(chi9_d5), mean(chi10_d5)),
+           X_SD = c(sd(chi1_d5), sd(chi2_d5), sd(chi3_d5), sd(chi4_d5), sd(chi5_d5), sd(chi6_d5), sd(chi7_d5), sd(chi8_d5), sd(chi9_d5), sd(chi10_d5)),
+           p_mean = c(mean(p1_d5), mean(p2_d5), mean(p3_d5), mean(p4_d5), mean(p5_d5), mean(p6_d5), mean(p7_d5), mean(p8_d5), mean(p9_d5), mean(p10_d5)),
+           p_SD = c(sd(p1_d5), sd(p2_d5), sd(p3_d5), sd(p4_d5), sd(p5_d5), sd(p6_d5), sd(p7_d5), sd(p8_d5), sd(p9_d5), sd(p10_d5)),
+           RMSEA_mean = c(mean(R1_d5), mean(R2_d5), mean(R3_d5), mean(R4_d5), mean(R5_d5), mean(R6_d5), mean(R7_d5), mean(R8_d5), mean(R9_d5), mean(R10_d5)),
+           RMSEA_SD = c(sd(R1_d5), sd(R2_d5), sd(R3_d5), sd(R4_d5), sd(R5_d5), sd(R6_d5), sd(R7_d5), sd(R8_d5), sd(R9_d5), sd(R10_d5)))
+```
+
+## D. Results of 7-point
+
+### 1. Discrimination index (a)
+```{r}
+a1_d7 <- rep(0,M)
+a2_d7 <- rep(0,M)
+a3_d7 <- rep(0,M)
+a4_d7 <- rep(0,M)
+a5_d7 <- rep(0,M)
+a6_d7 <- rep(0,M)
+a7_d7 <- rep(0,M)
+a8_d7 <- rep(0,M)
+a9_d7 <- rep(0,M)
+a10_d7 <- rep(0,M)
+
+for(i in 1:M){
+  a1_d7[i] <- itempar[[1]][[i]][1]
+  a2_d7[i] <- itempar[[1]][[i]][2]
+  a3_d7[i] <- itempar[[1]][[i]][3]
+  a4_d7[i] <- itempar[[1]][[i]][4]
+  a5_d7[i] <- itempar[[1]][[i]][5]
+  a6_d7[i] <- itempar[[1]][[i]][6]
+  a7_d7[i] <- itempar[[1]][[i]][7]
+  a8_d7[i] <- itempar[[1]][[i]][8]
+  a9_d7[i] <- itempar[[1]][[i]][9]
+  a10_d7[i] <- itempar[[1]][[i]][10]
+}
+```
+
+### 2. Item endorsement (b)
+```{r}
+b1_d7 <- rep(0,M)
+b2_d7 <- rep(0,M)
+b3_d7 <- rep(0,M)
+b4_d7 <- rep(0,M)
+b5_d7 <- rep(0,M)
+b6_d7 <- rep(0,M)
+b7_d7 <- rep(0,M)
+b8_d7 <- rep(0,M)
+b9_d7 <- rep(0,M)
+b10_d7 <- rep(0,M)
+
+for(i in 1:M){
+  b1_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[1]
+  b2_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[2]
+  b3_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[3]
+  b4_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[4]
+  b5_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[5]
+  b6_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[6]
+  b7_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[7]
+  b8_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[8]
+  b9_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[9]
+  b10_d7[i] <- apply(itempar[[3]][[i]][,-1], 1, mean)[10]
+}
+```
+
+### 3. Chi square statistics
+```{r}
+chi1_d7 <- rep(0,M)
+chi2_d7 <- rep(0,M)
+chi3_d7 <- rep(0,M)
+chi4_d7 <- rep(0,M)
+chi5_d7 <- rep(0,M)
+chi6_d7 <- rep(0,M)
+chi7_d7 <- rep(0,M)
+chi8_d7 <- rep(0,M)
+chi9_d7 <- rep(0,M)
+chi10_d7 <- rep(0,M)
+
+for(i in 1:M){
+  chi1_d7[i] <- itemfit_7[[i]][1,2]
+  chi2_d7[i] <- itemfit_7[[i]][2,2]
+  chi3_d7[i] <- itemfit_7[[i]][3,2]
+  chi4_d7[i] <- itemfit_7[[i]][4,2]
+  chi5_d7[i] <- itemfit_7[[i]][5,2]
+  chi6_d7[i] <- itemfit_7[[i]][6,2]
+  chi7_d7[i] <- itemfit_7[[i]][7,2]
+  chi8_d7[i] <- itemfit_7[[i]][8,2]
+  chi9_d7[i] <- itemfit_7[[i]][9,2]
+  chi10_d7[i] <- itemfit_7[[i]][10,2]
+}
+```
+
+### 4. p-value Chi square
+```{r}
+p1_d7 <- rep(0,M)
+p2_d7 <- rep(0,M)
+p3_d7 <- rep(0,M)
+p4_d7 <- rep(0,M)
+p5_d7 <- rep(0,M)
+p6_d7 <- rep(0,M)
+p7_d7 <- rep(0,M)
+p8_d7 <- rep(0,M)
+p9_d7 <- rep(0,M)
+p10_d7 <- rep(0,M)
+
+for(i in 1:M){
+  p1_d7[i] <- itemfit_7[[i]][1,5]
+  p2_d7[i] <- itemfit_7[[i]][2,5]
+  p3_d7[i] <- itemfit_7[[i]][3,5]
+  p4_d7[i] <- itemfit_7[[i]][4,5]
+  p5_d7[i] <- itemfit_7[[i]][5,5]
+  p6_d7[i] <- itemfit_7[[i]][6,5]
+  p7_d7[i] <- itemfit_7[[i]][7,5]
+  p8_d7[i] <- itemfit_7[[i]][8,5]
+  p9_d7[i] <- itemfit_7[[i]][9,5]
+  p10_d7[i] <- itemfit_7[[i]][10,5]
+}
+```
+
+### 5. RMSEA fit index
+```{r}
+R1_d7 <- rep(0,M)
+R2_d7 <- rep(0,M)
+R3_d7 <- rep(0,M)
+R4_d7 <- rep(0,M)
+R5_d7 <- rep(0,M)
+R6_d7 <- rep(0,M)
+R7_d7 <- rep(0,M)
+R8_d7 <- rep(0,M)
+R9_d7 <- rep(0,M)
+R10_d7 <- rep(0,M)
+
+for(i in 1:M){
+  R1_d7[i] <- itemfit_7[[i]][1,4]
+  R2_d7[i] <- itemfit_7[[i]][2,4]
+  R3_d7[i] <- itemfit_7[[i]][3,4]
+  R4_d7[i] <- itemfit_7[[i]][4,4]
+  R5_d7[i] <- itemfit_7[[i]][5,4]
+  R6_d7[i] <- itemfit_7[[i]][6,4]
+  R7_d7[i] <- itemfit_7[[i]][7,4]
+  R8_d7[i] <- itemfit_7[[i]][8,4]
+  R9_d7[i] <- itemfit_7[[i]][9,4]
+  R10_d7[i] <- itemfit_7[[i]][10,4]
+}
+```
+
+### Summary of 7-point experiment
+```{r}
+data.frame(Butir = c(1:10),
+           a_Mean = c(mean(a1_d7), mean(a2_d7), mean(a3_d7), mean(a4_d7), mean(a5_d7), mean(a6_d7), mean(a7_d7), mean(a8_d7), mean(a9_d7), mean(a10_d7)), 
+           a_SD = c(sd(a1_d7), sd(a2_d7), sd(a3_d7), sd(a4_d7), sd(a5_d7), sd(a6_d7), sd(a7_d7), sd(a8_d7), sd(a9_d7), sd(a10_d7)),
+           b_Mean = c(mean(b1_d7), mean(b2_d7), mean(b3_d7), mean(b4_d7), mean(b5_d7), mean(b6_d7), mean(b7_d7), mean(b8_d7), mean(b9_d7), mean(b10_d7)), 
+           b_SD = c(sd(b1_d7), sd(b2_d7), sd(b3_d7), sd(b4_d7), sd(b5_d7), sd(b6_d7), sd(b7_d7), sd(b8_d7), sd(b9_d7), sd(b10_d7)),
+           X_mean = c(mean(chi1_d7), mean(chi2_d7), mean(chi3_d7), mean(chi4_d7), mean(chi5_d7), mean(chi6_d7), mean(chi7_d7), mean(chi8_d7), mean(chi9_d7), mean(chi10_d7)),
+           X_SD = c(sd(chi1_d7), sd(chi2_d7), sd(chi3_d7), sd(chi4_d7), sd(chi5_d7), sd(chi6_d7), sd(chi7_d7), sd(chi8_d7), sd(chi9_d7), sd(chi10_d7)),
+           p_mean = c(mean(p1_d7), mean(p2_d7), mean(p3_d7), mean(p4_d7), mean(p5_d7), mean(p6_d7), mean(p7_d7), mean(p8_d7), mean(p9_d7), mean(p10_d7)),
+           p_SD = c(sd(p1_d7), sd(p2_d7), sd(p3_d7), sd(p4_d7), sd(p5_d7), sd(p6_d7), sd(p7_d7), sd(p8_d7), sd(p9_d7), sd(p10_d7)),
+           RMSEA_mean = c(mean(R1_d7), mean(R2_d7), mean(R3_d7), mean(R4_d7), mean(R5_d7), mean(R6_d7), mean(R7_d7), mean(R8_d7), mean(R9_d7), mean(R10_d7)),
+           RMSEA_SD = c(sd(R1_d7), sd(R2_d7), sd(R3_d7), sd(R4_d7), sd(R5_d7), sd(R6_d7), sd(R7_d7), sd(R8_d7), sd(R9_d7), sd(R10_d7)))
+```
+
+## E. Results of 9-point
+
+### 1. Discrimination index (a)
+```{r}
+a1_d9 <- rep(0,M)
+a2_d9 <- rep(0,M)
+a3_d9 <- rep(0,M)
+a4_d9 <- rep(0,M)
+a5_d9 <- rep(0,M)
+a6_d9 <- rep(0,M)
+a7_d9 <- rep(0,M)
+a8_d9 <- rep(0,M)
+a9_d9 <- rep(0,M)
+a10_d9 <- rep(0,M)
+
+for(i in 1:M){
+  a1_d9[i] <- itempar[[1]][[i]][1]
+  a2_d9[i] <- itempar[[1]][[i]][2]
+  a3_d9[i] <- itempar[[1]][[i]][3]
+  a4_d9[i] <- itempar[[1]][[i]][4]
+  a5_d9[i] <- itempar[[1]][[i]][5]
+  a6_d9[i] <- itempar[[1]][[i]][6]
+  a7_d9[i] <- itempar[[1]][[i]][7]
+  a8_d9[i] <- itempar[[1]][[i]][8]
+  a9_d9[i] <- itempar[[1]][[i]][9]
+  a10_d9[i] <- itempar[[1]][[i]][10]
+}
+```
+
+### 2. Item endorsement (b)
+```{r}
+b1_d9 <- rep(0,M)
+b2_d9 <- rep(0,M)
+b3_d9 <- rep(0,M)
+b4_d9 <- rep(0,M)
+b5_d9 <- rep(0,M)
+b6_d9 <- rep(0,M)
+b7_d9 <- rep(0,M)
+b8_d9 <- rep(0,M)
+b9_d9 <- rep(0,M)
+b10_d9 <- rep(0,M)
+
+for(i in 1:M){
+  b1_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[1]
+  b2_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[2]
+  b3_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[3]
+  b4_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[4]
+  b5_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[5]
+  b6_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[6]
+  b7_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[7]
+  b8_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[8]
+  b9_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[9]
+  b10_d9[i] <- apply(itempar[[4]][[i]][,-1], 1, mean)[10]
+}
+```
+
+### 3. Chi square statistics
+```{r}
+chi1_d9 <- rep(0,M)
+chi2_d9 <- rep(0,M)
+chi3_d9 <- rep(0,M)
+chi4_d9 <- rep(0,M)
+chi5_d9 <- rep(0,M)
+chi6_d9 <- rep(0,M)
+chi7_d9 <- rep(0,M)
+chi8_d9 <- rep(0,M)
+chi9_d9 <- rep(0,M)
+chi10_d9 <- rep(0,M)
+
+for(i in 1:M){
+  chi1_d9[i] <- itemfit_9[[i]][1,2]
+  chi2_d9[i] <- itemfit_9[[i]][2,2]
+  chi3_d9[i] <- itemfit_9[[i]][3,2]
+  chi4_d9[i] <- itemfit_9[[i]][4,2]
+  chi5_d9[i] <- itemfit_9[[i]][5,2]
+  chi6_d9[i] <- itemfit_9[[i]][6,2]
+  chi7_d9[i] <- itemfit_9[[i]][7,2]
+  chi8_d9[i] <- itemfit_9[[i]][8,2]
+  chi9_d9[i] <- itemfit_9[[i]][9,2]
+  chi10_d9[i] <- itemfit_9[[i]][10,2]
+}
+```
+
+### 4. p-value Chi square
+```{r}
+p1_d9 <- rep(0,M)
+p2_d9 <- rep(0,M)
+p3_d9 <- rep(0,M)
+p4_d9 <- rep(0,M)
+p5_d9 <- rep(0,M)
+p6_d9 <- rep(0,M)
+p7_d9 <- rep(0,M)
+p8_d9 <- rep(0,M)
+p9_d9 <- rep(0,M)
+p10_d9 <- rep(0,M)
+
+for(i in 1:M){
+  p1_d9[i] <- itemfit_9[[i]][1,5]
+  p2_d9[i] <- itemfit_9[[i]][2,5]
+  p3_d9[i] <- itemfit_9[[i]][3,5]
+  p4_d9[i] <- itemfit_9[[i]][4,5]
+  p5_d9[i] <- itemfit_9[[i]][5,5]
+  p6_d9[i] <- itemfit_9[[i]][6,5]
+  p7_d9[i] <- itemfit_9[[i]][7,5]
+  p8_d9[i] <- itemfit_9[[i]][8,5]
+  p9_d9[i] <- itemfit_9[[i]][9,5]
+  p10_d9[i] <- itemfit_9[[i]][10,5]
+}
+```
+
+### 5. RMSEA fit index
+```{r}
+R1_d9 <- rep(0,M)
+R2_d9 <- rep(0,M)
+R3_d9 <- rep(0,M)
+R4_d9 <- rep(0,M)
+R5_d9 <- rep(0,M)
+R6_d9 <- rep(0,M)
+R7_d9 <- rep(0,M)
+R8_d9 <- rep(0,M)
+R9_d9 <- rep(0,M)
+R10_d9 <- rep(0,M)
+
+for(i in 1:M){
+  R1_d9[i] <- itemfit_9[[i]][1,4]
+  R2_d9[i] <- itemfit_9[[i]][2,4]
+  R3_d9[i] <- itemfit_9[[i]][3,4]
+  R4_d9[i] <- itemfit_9[[i]][4,4]
+  R5_d9[i] <- itemfit_9[[i]][5,4]
+  R6_d9[i] <- itemfit_9[[i]][6,4]
+  R7_d9[i] <- itemfit_9[[i]][7,4]
+  R8_d9[i] <- itemfit_9[[i]][8,4]
+  R9_d9[i] <- itemfit_9[[i]][9,4]
+  R10_d9[i] <- itemfit_9[[i]][10,4]
+}
+```
+
+### 6. Summary of 9-point experiment
+```{r}
+data.frame(Butir = c(1:10),
+           a_Mean = c(mean(a1_d9), mean(a2_d9), mean(a3_d9), mean(a4_d9), mean(a5_d9), mean(a6_d9), mean(a7_d9), mean(a8_d9), mean(a9_d9), mean(a10_d9)), 
+           a_SD = c(sd(a1_d9), sd(a2_d9), sd(a3_d9), sd(a4_d9), sd(a5_d9), sd(a6_d9), sd(a7_d9), sd(a8_d9), sd(a9_d9), sd(a10_d9)),
+           b_Mean = c(mean(b1_d9), mean(b2_d9), mean(b3_d9), mean(b4_d9), mean(b5_d9), mean(b6_d9), mean(b7_d9), mean(b8_d9), mean(b9_d9), mean(b10_d9)), 
+           b_SD = c(sd(b1_d9), sd(b2_d9), sd(b3_d9), sd(b4_d9), sd(b5_d9), sd(b6_d9), sd(b7_d9), sd(b8_d9), sd(b9_d9), sd(b10_d9)),
+           X_mean = c(mean(chi1_d9), mean(chi2_d9), mean(chi3_d9), mean(chi4_d9), mean(chi5_d9), mean(chi6_d9), mean(chi7_d9), mean(chi8_d9), mean(chi9_d9), mean(chi10_d9)),
+           X_SD = c(sd(chi1_d9), sd(chi2_d9), sd(chi3_d9), sd(chi4_d9), sd(chi5_d9), sd(chi6_d9), sd(chi7_d9), sd(chi8_d9), sd(chi9_d9), sd(chi10_d9)),
+           p_mean = c(mean(p1_d9), mean(p2_d9), mean(p3_d9), mean(p4_d9), mean(p5_d9), mean(p6_d9), mean(p7_d9), mean(p8_d9), mean(p9_d9), mean(p10_d9)),
+           p_SD = c(sd(p1_d9), sd(p2_d9), sd(p3_d9), sd(p4_d9), sd(p5_d9), sd(p6_d9), sd(p7_d9), sd(p8_d9), sd(p9_d9), sd(p10_d9)),
+           RMSEA_mean = c(mean(R1_d9), mean(R2_d9), mean(R3_d9), mean(R4_d9), mean(R5_d9), mean(R6_d9), mean(R7_d9), mean(R8_d9), mean(R9_d9), mean(R10_d9)),
+           RMSEA_SD = c(sd(R1_d9), sd(R2_d9), sd(R3_d9), sd(R4_d9), sd(R5_d9), sd(R6_d9), sd(R7_d9), sd(R8_d9), sd(R9_d9), sd(R10_d9)))
+```
+
+## F. Results of 11-point
+
+### 1. Discrimination index (a)
+```{r}
+a1_d11 <- rep(0,M)
+a2_d11 <- rep(0,M)
+a3_d11 <- rep(0,M)
+a4_d11 <- rep(0,M)
+a5_d11 <- rep(0,M)
+a6_d11 <- rep(0,M)
+a7_d11 <- rep(0,M)
+a8_d11 <- rep(0,M)
+a9_d11 <- rep(0,M)
+a10_d11 <- rep(0,M)
+
+for(i in 1:M){
+  a1_d11[i] <- itempar[[1]][[i]][1]
+  a2_d11[i] <- itempar[[1]][[i]][2]
+  a3_d11[i] <- itempar[[1]][[i]][3]
+  a4_d11[i] <- itempar[[1]][[i]][4]
+  a5_d11[i] <- itempar[[1]][[i]][5]
+  a6_d11[i] <- itempar[[1]][[i]][6]
+  a7_d11[i] <- itempar[[1]][[i]][7]
+  a8_d11[i] <- itempar[[1]][[i]][8]
+  a9_d11[i] <- itempar[[1]][[i]][9]
+  a10_d11[i] <- itempar[[1]][[i]][10]
+}
+```
+
+### 2. Item endorsement (b)
+```{r}
+b1_d11 <- rep(0,M)
+b2_d11 <- rep(0,M)
+b3_d11 <- rep(0,M)
+b4_d11 <- rep(0,M)
+b5_d11 <- rep(0,M)
+b6_d11 <- rep(0,M)
+b7_d11 <- rep(0,M)
+b8_d11 <- rep(0,M)
+b9_d11 <- rep(0,M)
+b10_d11 <- rep(0,M)
+
+for(i in 1:M){
+  b1_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[1]
+  b2_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[2]
+  b3_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[3]
+  b4_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[4]
+  b5_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[5]
+  b6_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[6]
+  b7_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[7]
+  b8_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[8]
+  b9_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[9]
+  b10_d11[i] <- apply(itempar[[5]][[i]][,-1], 1, mean)[10]
+}
+```
+
+### 3. Chi square statistics
+```{r}
+chi1_d11 <- rep(0,M)
+chi2_d11 <- rep(0,M)
+chi3_d11 <- rep(0,M)
+chi4_d11 <- rep(0,M)
+chi5_d11 <- rep(0,M)
+chi6_d11 <- rep(0,M)
+chi7_d11 <- rep(0,M)
+chi8_d11 <- rep(0,M)
+chi9_d11 <- rep(0,M)
+chi10_d11 <- rep(0,M)
+
+for(i in 1:M){
+  chi1_d11[i] <- itemfit_11[[i]][1,2]
+  chi2_d11[i] <- itemfit_11[[i]][2,2]
+  chi3_d11[i] <- itemfit_11[[i]][3,2]
+  chi4_d11[i] <- itemfit_11[[i]][4,2]
+  chi5_d11[i] <- itemfit_11[[i]][5,2]
+  chi6_d11[i] <- itemfit_11[[i]][6,2]
+  chi7_d11[i] <- itemfit_11[[i]][7,2]
+  chi8_d11[i] <- itemfit_11[[i]][8,2]
+  chi9_d11[i] <- itemfit_11[[i]][9,2]
+  chi10_d11[i] <- itemfit_11[[i]][10,2]
+}
+```
+
+### 4. p-value Chi square
+```{r}
+p1_d11 <- rep(0,M)
+p2_d11 <- rep(0,M)
+p3_d11 <- rep(0,M)
+p4_d11 <- rep(0,M)
+p5_d11 <- rep(0,M)
+p6_d11 <- rep(0,M)
+p7_d11 <- rep(0,M)
+p8_d11 <- rep(0,M)
+p9_d11 <- rep(0,M)
+p10_d11 <- rep(0,M)
+
+for(i in 1:M){
+  p1_d11[i] <- itemfit_11[[i]][1,5]
+  p2_d11[i] <- itemfit_11[[i]][2,5]
+  p3_d11[i] <- itemfit_11[[i]][3,5]
+  p4_d11[i] <- itemfit_11[[i]][4,5]
+  p5_d11[i] <- itemfit_11[[i]][5,5]
+  p6_d11[i] <- itemfit_11[[i]][6,5]
+  p7_d11[i] <- itemfit_11[[i]][7,5]
+  p8_d11[i] <- itemfit_11[[i]][8,5]
+  p9_d11[i] <- itemfit_11[[i]][9,5]
+  p10_d11[i] <- itemfit_11[[i]][10,5]
+}
+```
+
+### 5. RMSEA fit index
+```{r}
+R1_d11 <- rep(0,M)
+R2_d11 <- rep(0,M)
+R3_d11 <- rep(0,M)
+R4_d11 <- rep(0,M)
+R5_d11 <- rep(0,M)
+R6_d11 <- rep(0,M)
+R7_d11 <- rep(0,M)
+R8_d11 <- rep(0,M)
+R9_d11 <- rep(0,M)
+R10_d11 <- rep(0,M)
+
+for(i in 1:M){
+  R1_d11[i] <- itemfit_11[[i]][1,4]
+  R2_d11[i] <- itemfit_11[[i]][2,4]
+  R3_d11[i] <- itemfit_11[[i]][3,4]
+  R4_d11[i] <- itemfit_11[[i]][4,4]
+  R5_d11[i] <- itemfit_11[[i]][5,4]
+  R6_d11[i] <- itemfit_11[[i]][6,4]
+  R7_d11[i] <- itemfit_11[[i]][7,4]
+  R8_d11[i] <- itemfit_11[[i]][8,4]
+  R9_d11[i] <- itemfit_11[[i]][9,4]
+  R10_d11[i] <- itemfit_11[[i]][10,4]
+}
+```
+
+### 6. Summary of 11-point experiment
+```{r}
+data.frame(Butir = c(1:10),
+           a_Mean = c(mean(a1_d11), mean(a2_d11), mean(a3_d11), mean(a4_d11), mean(a5_d11), mean(a6_d11), mean(a7_d11), mean(a8_d11), mean(a9_d11), mean(a10_d11)), 
+           a_SD = c(sd(a1_d11), sd(a2_d11), sd(a3_d11), sd(a4_d11), sd(a5_d11), sd(a6_d11), sd(a7_d11), sd(a8_d11), sd(a9_d11), sd(a10_d11)),
+           b_Mean = c(mean(b1_d11), mean(b2_d11), mean(b3_d11), mean(b4_d11), mean(b5_d11), mean(b6_d11), mean(b7_d11), mean(b8_d11), mean(b9_d11), mean(b10_d11)), 
+           b_SD = c(sd(b1_d11), sd(b2_d11), sd(b3_d11), sd(b4_d11), sd(b5_d11), sd(b6_d11), sd(b7_d11), sd(b8_d11), sd(b9_d11), sd(b10_d11)),
+           X_mean = c(mean(chi1_d11), mean(chi2_d11), mean(chi3_d11), mean(chi4_d11), mean(chi5_d11), mean(chi6_d11), mean(chi7_d11), mean(chi8_d11), mean(chi9_d11), mean(chi10_d11)),
+           X_SD = c(sd(chi1_d11), sd(chi2_d11), sd(chi3_d11), sd(chi4_d11), sd(chi5_d11), sd(chi6_d11), sd(chi7_d11), sd(chi8_d11), sd(chi9_d11), sd(chi10_d11)),
+           p_mean = c(mean(p1_d11), mean(p2_d11), mean(p3_d11), mean(p4_d11), mean(p5_d11), mean(p6_d11), mean(p7_d11), mean(p8_d11), mean(p9_d11), mean(p10_d11)),
+           p_SD = c(sd(p1_d11), sd(p2_d11), sd(p3_d11), sd(p4_d11), sd(p5_d11), sd(p6_d11), sd(p7_d11), sd(p8_d11), sd(p9_d11), sd(p10_d11)),
+           RMSEA_mean = c(mean(R1_d11), mean(R2_d11), mean(R3_d11), mean(R4_d11), mean(R5_d11), mean(R6_d11), mean(R7_d11), mean(R8_d11), mean(R9_d11), mean(R10_d11)),
+           RMSEA_SD = c(sd(R1_d11), sd(R2_d11), sd(R3_d11), sd(R4_d11), sd(R5_d11), sd(R6_d11), sd(R7_d11), sd(R8_d11), sd(R9_d11), sd(R10_d11)))
+```
+
+# IV. Global fit indices
+
+## A. Extract AIC
+```{r}
+M <- 1000
+AIC_3 = rep(0, M)
+AIC_5 = rep(0, M)
+AIC_7 = rep(0, M)
+AIC_9 = rep(0, M)
+AIC_11 = rep(0, M)
+
+for(i in 1:M){
+  AIC_3[i] <- mod.grm_3[[i]]@Fit$AIC
+  AIC_5[i] <- mod.grm_5[[i]]@Fit$AIC
+  AIC_7[i] <- mod.grm_7[[i]]@Fit$AIC
+  AIC_9[i] <- mod.grm_9[[i]]@Fit$AIC
+  AIC_11[i] <- mod.grm_11[[i]]@Fit$AIC
+}
+
+AIC = list(AIC_3, AIC_5, AIC_7, AIC_9, AIC_11)
+
+saveRDS(AIC, "output GRM/AIC.rds")
+```
+
+```{r, fig.height= 5, fig.width=15}
+AIC <- data.frame(AIC_3, AIC_5, AIC_7, AIC_9, AIC_11)
+library(psych)
+describe(AIC)
+AIC <- stack(AIC)
+AIC_aov <- aov(values~ind, AIC)
+summary(AIC_aov)
+```
+
+## B. Extract BIC
+```{r}
+M <- 1000
+BIC_3 = rep(0, M)
+BIC_5 = rep(0, M)
+BIC_7 = rep(0, M)
+BIC_9 = rep(0, M)
+BIC_11 = rep(0, M)
+
+for(i in 1:M){
+  BIC_3[i] <- mod.grm_3[[i]]@Fit$BIC
+  BIC_5[i] <- mod.grm_5[[i]]@Fit$BIC
+  BIC_7[i] <- mod.grm_7[[i]]@Fit$BIC
+  BIC_9[i] <- mod.grm_9[[i]]@Fit$BIC
+  BIC_11[i] <- mod.grm_11[[i]]@Fit$BIC
+}
+
+BIC = data.frame(BIC_3, BIC_5, BIC_7, BIC_9, BIC_11)
+
+describe(BIC)
+
+BIC <- stack(BIC)
+BIC_aov <- aov(values~ind, BIC)
+summary(BIC_aov)
+```
+
+## C. Extract SABIC
+```{r}
+M <- 1000
+SABIC_3 = rep(0, M)
+SABIC_5 = rep(0, M)
+SABIC_7 = rep(0, M)
+SABIC_9 = rep(0, M)
+SABIC_11 = rep(0, M)
+
+for(i in 1:M){
+  SABIC_3[i] <- mod.grm_3[[i]]@Fit$SABIC
+  SABIC_5[i] <- mod.grm_5[[i]]@Fit$SABIC
+  SABIC_7[i] <- mod.grm_7[[i]]@Fit$SABIC
+  SABIC_9[i] <- mod.grm_9[[i]]@Fit$SABIC
+  SABIC_11[i] <- mod.grm_11[[i]]@Fit$SABIC
+}
+
+SABIC = data.frame(SABIC_3, SABIC_5, SABIC_7, SABIC_9, SABIC_11)
+
+describe(SABIC)
+SABIC <- stack(SABIC)
+SABIC_aov <- aov(values~ind, SABIC)
+summary(SABIC_aov)
+```
+
+# IV. Creating test information function curve (TIF)
+```{r}
+inf_3 <- list()
+inf_5 <- list()
+inf_7 <- list()
+inf_9 <- list()
+inf_11 <- list()
+
+for(i in 1:M){
+  inf_3[[i]] <- plot(mod.grm_3[[i]], type = "info")$panel.args[[1]]$y
+  inf_5[[i]] <- plot(mod.grm_5[[i]], type = "info")$panel.args[[1]]$y
+  inf_7[[i]] <- plot(mod.grm_7[[i]], type = "info")$panel.args[[1]]$y
+  inf_9[[i]] <- plot(mod.grm_9[[i]], type = "info")$panel.args[[1]]$y
+  inf_11[[i]] <- plot(mod.grm_11[[i]], type = "info")$panel.args[[1]]$y
+}
+
+# nilai titik pada kurva informasi
+x <- plot(mod.grm_3[[i]], type = "info")$panel.args[[1]]$x
+y_3 <- rep(0,200)
+y_5 <- rep(0,200)
+y_7 <- rep(0,200)
+y_9 <- rep(0,200)
+y_11 <- rep(0,200)
+
+for(i in 1:200){
+  for(j in 1:M){
+    y_3[i] <- inf_3[[j]][i]
+    y_5[i] <- inf_5[[j]][i]
+    y_7[i] <- inf_7[[j]][i]
+    y_9[i] <- inf_9[[j]][i]
+    y_11[i] <- inf_11[[j]][i]
+  }
+}
+```
+
+```{r, warning = F, fig.height=6, fig.width=7}
+TIF <- data.frame(x, y_3, y_5, y_7, y_9, y_11, SEM_3 = 1/sqrt(y_3), SEM_5 = 1/sqrt(y_5), SEM_7 = 1/sqrt(y_7), SEM_9 = 1/sqrt(y_9), SEM_11 = 1/sqrt(y_11))
+library(ggplot2)
+ggplot(TIF, aes(x = x, y = Information, color = Legend)) + theme_light() +
+  geom_line(aes(y = y_3, col = "3 point"), size = 1.2) + 
+  geom_line(aes(y = y_5, col = "5 point"), size = 1.2) +
+  geom_line(aes(y = y_7, col = "7 point"), size = 1.2) +
+  geom_line(aes(y = y_9, col = "9 point"), size = 1.2) +
+  geom_line(aes(y = y_11, col = "11 point"), size = 1.2) +
+  geom_point(aes(y = SEM_3, col = "3 point"), size = 1.2) +
+  geom_point(aes(y = SEM_5, col = "5 point"), size = 1.2) +
+  geom_point(aes(y = SEM_7, col = "7 point"), size = 1.2) +
+  geom_point(aes(y = SEM_9, col = "9 point"), size = 1.2) +
+  geom_point(aes(y = SEM_11, col = "11 point"), size = 1.2) +
+  ggtitle("Test information function (TIF) of five number Likert scale categories") +
+  xlab("Latent trait (Theta)") + ylim(0,12) + theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_discrete(limits = c("3 point", "5 point", "7 point", "9 point", "11 point")) +
+  theme(legend.position="bottom")
+```
+
+# V. TIF comparison between 3, 7, 9, 11
+```{r}
+TIF37911 <- stack(TIF[, c(2,4:6)])
+aov37911 <- aov(values~ind, TIF37911)
+summary(aov37911)
+```
+
+# VI. TIF comparison between 3 dan 5
+```{r}
+TIF35 <- stack(TIF[2:3])
+aov35 <- aov(values~ind, TIF35)
+summary(aov35)
+```
+
+# VII. TIF comparison between 7, 9, 11
+```{r}
+TIF7911 <- stack(TIF[4:6])
+aov7911 <- aov(values~ind, TIF7911)
+summary(aov7911)
+```
+
+
+
+
+

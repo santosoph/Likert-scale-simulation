@@ -1,0 +1,95 @@
+---
+title: "GRM modeling"
+output: html_notebook
+---
+
+Author : Purwoko Haryadi Santoso, UNY, Indonesia
+
+# I. Open the five generated dataset (.RDS)
+```{r}
+data_3 <- readRDS("output dataset/data_3.rds")
+data_5 <- readRDS("output dataset/data_5.rds")
+data_7 <- readRDS("output dataset/data_7.rds")
+data_9 <- readRDS("output dataset/data_9.rds")
+data_11 <- readRDS("output dataset/data_11.rds")
+```
+
+# II. GRM modeling for 3-point (Warning : this will takes your time, prepare your hot coffee and monitor)
+```{r, warning=FALSE}
+library(mirt)
+mod.grm_3 = list()
+
+for(i in 1:1000){
+  mod.grm_3[i] <- mirt(data.frame(data_3[[i]]), model=1, itemtype="graded")
+}
+
+saveRDS(mod.grm_3, "output GRM/mod.grm_3.rds")
+```
+
+# III. GRM modeling for 5-point (Warning : the greater point number, the longer computation will take !)
+```{r, warning=FALSE}
+mod.grm_5 = list()
+
+for(i in 1:1000){
+  mod.grm_5[i] <- mirt(data.frame(data_5[[i]]), model=1, itemtype="graded")
+}
+
+saveRDS(mod.grm_5, "output GRM/mod.grm_5.rds")
+```
+
+# IV. GRM modeling for 7-point
+```{r, warning=FALSE}
+mod.grm_7 = list()
+
+for(i in 1:1000){
+  mod.grm_7[i] <- mirt(data.frame(data_7[[i]]), model=1, itemtype="graded")
+}
+
+saveRDS(mod.grm_7, "output GRM/mod.grm_7.rds")
+```
+
+# V. GRM modeling for 9-point
+```{r, warning=FALSE}
+mod.grm_9 = list()
+
+for(i in 1:1000){
+  mod.grm_9[i] <- mirt(data.frame(data_9[[i]]), model=1, itemtype="graded")
+}
+
+saveRDS(mod.grm_9, "output GRM/mod.grm_9.rds")
+```
+
+# VI. GRM modeling for 9-point
+```{r, warning=FALSE}
+mod.grm_11 = list()
+
+for(i in 1:1000){
+  mod.grm_11[i] <- mirt(data.frame(data_11[[i]]), model=1, itemtype="graded")
+}
+
+saveRDS(mod.grm_11, "output GRM/mod.grm_11.rds")
+```
+
+# Additional code : extract item fit (chi square)
+
+```{r, warning=FALSE}
+itemfit_3 <- list()
+itemfit_5 <- list()
+itemfit_7 <- list()
+itemfit_9 <- list()
+itemfit_11 <- list()
+
+for(i in 1:M){
+  itemfit_3[[i]] <- itemfit(mod.grm_3[[i]])
+  itemfit_5[[i]] <- itemfit(mod.grm_5[[i]])
+  itemfit_7[[i]] <- itemfit(mod.grm_7[[i]])
+  itemfit_9[[i]] <- itemfit(mod.grm_9[[i]])
+  itemfit_11[[i]] <- itemfit(mod.grm_11[[i]])
+}
+
+itemfit <- list(itemfit_3, itemfit_5, itemfit_7, itemfit_9, itemfit_11)
+saveRDS(itemfit, "output GRM/itemfit.rds")
+```
+
+
+
